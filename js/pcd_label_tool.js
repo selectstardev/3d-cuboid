@@ -2985,9 +2985,11 @@ function createGrid() {
     let posZLidar;
     let translationX;
     if (labelTool.currentDataset === labelTool.datasets.NuScenes) {
+        console.log("11111")
         posZLidar = labelTool.positionLidarNuscenes[2];
         translationX = 0;
     } else {
+        console.log("22222")
         posZLidar = labelTool.positionLidar[2];
         translationX = gridSize / 2;
     }
