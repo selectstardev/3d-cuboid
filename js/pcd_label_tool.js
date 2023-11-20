@@ -104,8 +104,11 @@ let parameters = {
     download_video: function () {
         downloadVideo();
     },
+    refresh: function(){
+
+    },
     download: function () {
-        download();
+        if(confirm("저장하시겠습니까?")) download();
     },
     undo: function () {
         undoOperation();
@@ -572,6 +575,25 @@ function paddingRight(s, c, n) {
 }
 
 function download() {
+    let annotationFiles = labelTool.createAnnotationFiles();
+    let zip = new JSZip();
+    //
+    for (let i = 0; i < annotationFiles.length; i++) {
+        let fileObject = annotationFiles[i];
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/save', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(fileObject);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                var response = xhr.responseText; // 서버에서 받은 응답 데이터
+            }
+        };
+    }
+    alert("데이터가 저장되었습니다.")
+}
+
+function _download() {
     let annotationFiles = labelTool.createAnnotationFiles();
     let zip = new JSZip();
     for (let i = 0; i < annotationFiles.length; i++) {
@@ -2374,6 +2396,9 @@ function mouseUpLogic(ev) {
     }
     if (ev.button === 0) {
         let rect = ev.target.getBoundingClientRect();
+        let el = $("#canvas3d")
+        let width = el.attr('width')
+        let height = el.attr('height')
         mouseUp.x = ((ev.clientX - rect.left) / $("#canvas3d canvas").attr("width")) * 2 - 1;
         mouseUp.y = -((ev.clientY - rect.top) / $("#canvas3d canvas").attr("height")) * 2 + 1;
         let ray = undefined;
@@ -3176,10 +3201,12 @@ function init() {
     canvas3D.addEventListener('mousemove', onDocumentMouseMove, false);
 
     canvas3D.onmousedown = function (ev) {
+        console.log("handleMouseDown down")
         handleMouseDown(ev);
     };
 
     canvas3D.onmouseup = function (ev) {
+        console.log("handleMouseUp up")
         handleMouseUp(ev);
     };
 
@@ -3202,7 +3229,8 @@ function init() {
     if (guiBoundingBoxMenuInitialized === false) {
         guiBoundingBoxMenuInitialized = true;
         // 3D BB controls
-        guiOptions.add(parameters, 'download').name("Download Annotations");
+        guiOptions.add(parameters, 'refresh').name("Refresh App");
+        guiOptions.add(parameters, 'download').name("Save Data");
         guiOptions.add(parameters, 'download_video').name("Create and Download Video");
         guiOptions.add(parameters, 'undo').name("Undo");
         guiOptions.add(parameters, 'views', ['perspective', 'orthographic']).name("Select View").onChange(function (value) {

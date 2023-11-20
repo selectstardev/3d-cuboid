@@ -635,6 +635,7 @@ let labelTool = {
                 "name": labelTool.fileNames[j],
                 "timestamp": 0,
                 "index": j,
+                "path": 'input/' + labelTool.currentDataset + '/' + labelTool.sequence + '/annotations/' + labelTool.fileNames[j] + '.json',
                 "labels": annotationsInFrame
             };
             annotationFiles.push(JSON.stringify(annotationsInFrameJSON));

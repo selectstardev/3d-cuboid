@@ -272,7 +272,7 @@ THREE.TransformControls = function (camera, domElement) {
 
                 pointStart.copy(planeIntersect.point).sub(worldPositionStart);
 
-                if (space === 'local') pointStart.applyQuaternion(worldQuaternionStart.clone().inverse());
+                if (space === 'local') pointStart.applyQuaternion(worldQuaternionStart.clone().invert());
 
             }
 
@@ -311,7 +311,7 @@ THREE.TransformControls = function (camera, domElement) {
 
         pointEnd.copy(planeIntersect.point).sub(worldPositionStart);
 
-        if (space === 'local') pointEnd.applyQuaternion(worldQuaternionStart.clone().inverse());
+        if (space === 'local') pointEnd.applyQuaternion(worldQuaternionStart.clone().invert());
 
         if (mode === 'translate') {
 
@@ -341,7 +341,7 @@ THREE.TransformControls = function (camera, domElement) {
 
                 if (space === 'local') {
 
-                    object.position.applyQuaternion(_tempQuaternion.copy(_quaternionStart).inverse());
+                    object.position.applyQuaternion(_tempQuaternion.copy(_quaternionStart).invert());
 
                     if (axis.search('X') !== -1) {
                         object.position.x = Math.round(object.position.x / this.translationSnap) * this.translationSnap;
@@ -1148,7 +1148,7 @@ THREE.TransformControlsGizmo = function () {
                     handle.position.copy(this.worldPositionStart);
                     handle.quaternion.copy(this.worldQuaternionStart);
                     tempVector.set(1e-10, 1e-10, 1e-10).add(this.worldPositionStart).sub(this.worldPosition).multiplyScalar(-1);
-                    tempVector.applyQuaternion(this.worldQuaternionStart.clone().inverse());
+                    tempVector.applyQuaternion(this.worldQuaternionStart.clone().invert());
                     handle.scale.copy(tempVector);
                     handle.visible = this.dragging;
 
@@ -1272,7 +1272,7 @@ THREE.TransformControlsGizmo = function () {
                 // Align handles to current local or world rotation
 
                 tempQuaternion2.copy(quaternion);
-                alignVector.copy(this.eye).applyQuaternion(tempQuaternion.copy(quaternion).inverse());
+                alignVector.copy(this.eye).applyQuaternion(tempQuaternion.copy(quaternion).invert());
 
                 if (handle.name.search("E") !== -1) {
 
